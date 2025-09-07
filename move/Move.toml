@@ -1,0 +1,11 @@
+[package]
+name = "tip_jar"
+version = "1.0.0"
+
+[addresses]
+my_addr = "0x6826fe5466bc58a04a2abd14159456daa38a1c9981be60569cc1e264f2aef568"
+
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-core.git"
+rev = "devnet"  # This is the line you changed
+subdir = "aptos-move/framework/aptos-framework"

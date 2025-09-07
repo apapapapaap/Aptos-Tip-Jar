@@ -1,0 +1,296 @@
+/* Import a modern font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* 1. ROOT & GLOBAL SETUP */
+:root {
+  --background-dark: #0f0c29; /* Deep, rich dark blue */
+  --background-mid: #302b63; /* Muted purple */
+  --background-light: #24243e; /* Dark slate purple */
+  
+  --glass-bg: rgba(36, 36, 62, 0.4); /* More subtle glass background */
+  --glass-border: rgba(255, 255, 255, 0.08); /* Fainter border */
+  
+  --text-primary: #e0e0e8;
+  --text-secondary: #a9a9b3;
+  
+  --primary-accent: #00f2fe; /* Vibrant Cyan */
+  --primary-accent-hover: #00c1db;
+  --primary-accent-glow: rgba(0, 242, 254, 0.4); /* For glow effects */
+
+  --success-color: #42d392;
+  --error-color: #ff6464;
+
+  font-family: 'Inter', system-ui, sans-serif;
+  color-scheme: dark;
+  font-weight: 400; /* Default font weight */
+  line-height: 1.6;
+}
+
+body {
+  margin: 0;
+  background-color: var(--background-dark);
+  color: var(--text-primary);
+  overflow: hidden; /* Prevents scrollbars from background animation and initial hidden state */
+}
+
+/* 2. ANIMATED AURORA BACKGROUND */
+.app-container-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* Ensure background stays within bounds */
+}
+
+.app-container-wrapper::before {
+  content: '';
+  position: absolute;
+  top: -50%; /* Start higher */
+  left: -50%; /* Start left */
+  width: 200%; /* Cover more area */
+  height: 200%; /* Cover more area */
+  z-index: -1;
+  background: radial-gradient(circle at 15% 20%, var(--background-mid) 0%, transparent 35%),
+              radial-gradient(circle at 85% 75%, var(--primary-accent) 0%, transparent 40%),
+              radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.05) 0%, transparent 30%); /* Subtle white highlight */
+  background-color: var(--background-dark);
+  animation: aurora-flow 30s infinite alternate ease-in-out; /* Slower, smoother, alternating */
+  opacity: 0.6; /* Slightly more opaque for richer color */
+  transform-origin: center center; /* Ensure rotation is from center */
+}
+
+@keyframes aurora-flow {
+  0% { transform: scale(1) rotate(0deg); opacity: 0.6; }
+  50% { transform: scale(1.1) rotate(180deg); opacity: 0.7; }
+  100% { transform: scale(1) rotate(360deg); opacity: 0.6; }
+}
+
+/* 3. INITIAL PAGE LOAD ANIMATION */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--background-dark);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+}
+
+.loading-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.glow-spinner {
+  width: 80px;
+  height: 80px;
+  border: 4px solid var(--primary-accent);
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1.5s linear infinite, glow 2s ease-in-out infinite alternate;
+  box-shadow: 0 0 20px var(--primary-accent-glow);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes glow {
+  0% { box-shadow: 0 0 20px var(--primary-accent-glow), 0 0 40px var(--primary-accent-glow); }
+  100% { box-shadow: 0 0 30px var(--primary-accent-glow), 0 0 60px var(--primary-accent-glow); }
+}
+
+/* 4. MAIN APP LAYOUT (Initial hidden state for animation) */
+.app-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+  box-sizing: border-box;
+  opacity: 0; /* Initially hidden */
+  transform: scale(0.95); /* Slightly scaled down */
+  transition: opacity 1s ease-out, transform 1s ease-out; /* Animation for reveal */
+}
+
+.app-container.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.app-header {
+  width: 100%;
+  max-width: 550px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem; /* Increased margin */
+}
+
+.app-header h1 {
+  font-size: 2.4rem; /* Slightly larger */
+  font-weight: 700;
+  color: var(--text-primary);
+  text-shadow: 0 0 15px var(--primary-accent-glow);
+}
+
+/* 5. GLASSMORPHISM CARD */
+.tip-jar-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px; /* More rounded corners */
+  padding: 2.5rem; /* Increased padding */
+  width: 100%;
+  max-width: 480px; /* Slightly narrower for focus */
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4); /* More prominent shadow */
+  backdrop-filter: blur(15px); /* More blur */
+  -webkit-backdrop-filter: blur(15px);
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem; /* Increased gap */
+}
+
+.wallet-info {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  background-color: rgba(0, 0, 0, 0.25); /* Darker background */
+  padding: 0.6rem 1.2rem;
+  border-radius: 25px; /* More rounded */
+  font-family: 'JetBrains Mono', monospace; /* Monospace font for address */
+  font-size: 0.95rem;
+  align-self: center;
+  border: 1px solid rgba(255, 255, 255, 0.05); /* Subtle border */
+}
+
+/* 6. INTERACTIVE ELEMENTS */
+.form-group {
+  display: flex;
+  gap: 1.2rem; /* Increased gap */
+}
+
+.tip-input {
+  flex-grow: 1;
+  background: rgba(0, 0, 0, 0.4); /* Darker input background */
+  border: 1px solid rgba(255, 255, 255, 0.15); /* Slightly stronger border */
+  color: var(--text-primary);
+  padding: 0.9rem 1.2rem; /* Increased padding */
+  border-radius: 12px; /* More rounded */
+  font-size: 1.05rem; /* Slightly larger font */
+  transition: all 0.3s ease;
+}
+.tip-input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+.tip-input:focus {
+  outline: none;
+  border-color: var(--primary-accent);
+  box-shadow: 0 0 12px 0 var(--primary-accent-glow);
+}
+
+.tip-button {
+  border: none;
+  border-radius: 12px; /* More rounded */
+  padding: 0.9rem 1.8rem; /* Increased padding */
+  font-size: 1.05rem; /* Slightly larger font */
+  font-weight: 600;
+  background: var(--primary-accent);
+  color: var(--background-dark); /* Contrast with button color */
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Springy transition */
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.tip-button:hover:not(:disabled) {
+  background: var(--primary-accent-hover);
+  transform: translateY(-3px) scale(1.02); /* More pronounced hover */
+  box-shadow: 0 6px 25px var(--primary-accent-glow);
+}
+.tip-button:disabled {
+  background: #555;
+  color: #888;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.spinner {
+  width: 20px; /* Slightly larger spinner */
+  height: 20px;
+  border: 2px solid currentColor;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite; /* Reusing spin animation */
+}
+
+.connection-prompt {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  text-align: center;
+  padding: 1rem;
+}
+
+/* 7. TOAST NOTIFICATIONS */
+.toast-container {
+  position: fixed;
+  bottom: 25px; /* Slightly higher */
+  right: 25px; /* Slightly further from edge */
+  z-index: 1500; /* Higher than card, lower than loading overlay */
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: rgba(36, 36, 62, 0.6); /* Slightly more transparent */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem 1.2rem;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  width: 300px; /* Slightly narrower */
+  animation: slide-in 0.5s ease-out forwards;
+  position: relative;
+}
+.toast.toast-success { border-left: 5px solid var(--success-color); } /* Thicker border */
+.toast.toast-error { border-left: 5px solid var(--error-color); }
+.toast-content p { margin: 0; font-weight: 600; font-size: 1rem; }
+.toast-content span { font-size: 0.85em; color: var(--text-secondary); line-height: 1.4; }
+.toast-content a { color: var(--primary-accent); text-decoration: none; font-weight: 500;}
+.toast-content a:hover { text-decoration: underline; }
+
+/* 8. ANIMATIONS (Refined) */
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+/* Fade-in for the main content after loading */
+@keyframes fade-in-scale {
+  from { opacity: 0; transform: scale(0.9); border-color: transparent; box-shadow: none; }
+  to { opacity: 1; transform: scale(1); border-color: var(--glass-border); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); }
+}
+@keyframes slide-in {
+  from { transform: translateX(120%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
